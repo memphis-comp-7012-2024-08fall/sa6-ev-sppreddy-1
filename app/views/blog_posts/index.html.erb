@@ -7,11 +7,13 @@
       <% @blog_posts.each do |blog_post| %>
         <tr>
           <td><%= blog_post.title %></td>
-          <td>TODO_AUTHOR</td>
+          <td><%= blog_post.creator.email %></td>
           <td class="text-nowrap">
             <%= link_to 'Read', blog_post_path(blog_post), class: 'btn btn-primary btn-sm' %>
+            <% if blog_post.creator == current_user %>
             <%= link_to 'Edit', edit_blog_post_path(blog_post), class: 'btn btn-primary btn-sm' %>
             <%= button_to 'Delete', blog_post_path(blog_post), method: :delete, data: { turbo: false }, class: 'btn btn-primary btn-sm', form: { class: 'd-inline' } %>
+            <% end %>
           </td>
         </tr>
       <% end %>

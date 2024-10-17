@@ -1,7 +1,7 @@
 <h1 class="my-4"><%= @blog_post.title %></h1>
 
 <p>
-  By TODO_AUTHOR
+ By <%= blog_post.creator.email %>
 </p>
 
 <%= simple_format(@blog_post.body) %>

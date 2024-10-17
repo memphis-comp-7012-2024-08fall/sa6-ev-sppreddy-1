@@ -1,4 +1,5 @@
 class BlogPostsController < ApplicationController
+  before_action :require_permission, except: [:index, :show, :new, :create]
   def index
     @blog_posts = BlogPost.order(created_at: :desc)
     render :index
@@ -15,7 +16,7 @@ class BlogPostsController < ApplicationController
   end
 
   def create
-    @blog_post = BlogPost.new(params.require(:blog_post).permit(:title, :body))
+    @blog_post = current_user.blog_posts.build(params.require(:blog_post).permit(:title, :body))
     if @blog_post.save
       flash[:success] = 'Blog post was successfully created.'
       redirect_to blog_post_path(@blog_post)
@@ -46,5 +47,11 @@ class BlogPostsController < ApplicationController
     @blog_post.destroy
     flash[:success] = 'Blog post was successfully destroyed.'
     redirect_to blog_posts_url
+  end
+  def require_permission
+    if BlogPost.find(params[:id]).creator!=current_user 
+      flash[:error] ='You do not have permission to do that.'
+      redirect_to blog_post_path
+    end
   end
 end
